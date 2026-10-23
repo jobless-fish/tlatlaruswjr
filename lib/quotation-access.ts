@@ -1,0 +1,2 @@
+import { env } from "cloudflare:workers";
+export async function canOpenQuotation(req:Request){const token=req.headers.get("authorization")?.replace(/^Bearer /,"")||"";if(!token||token.length>200||!env.ROOM_TOKEN_HASH)return false;const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(token));const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("");return hash===env.ROOM_TOKEN_HASH;}
